@@ -1,0 +1,147 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  CUSTOMER
+  COURIER
+  RESTAURANT
+  ADMIN
+}
+
+model User {
+  id           String          @id @default(cuid())
+  email        String?         @unique
+  phone        String?         @unique
+  role         UserRole        @default(CUSTOMER)
+  identities   UserIdentity[]
+  sessions     Session[]
+  otpChallenges OTPChallenge[]
+  courierProfile CourierProfile?
+  restaurantProfile RestaurantProfile?
+  orders       Order[]
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+}
+
+model UserIdentity {
+  id             String   @id @default(cuid())
+  userId         String
+  provider       String
+  providerUserId String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerUserId])
+  @@map("user_identities")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  refreshToken String
+  expiresAt    DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("sessions")
+}
+
+model OTPChallenge {
+  id          String   @id @default(cuid())
+  userId      String?
+  destination String
+  codeHash    String
+  expiresAt   DateTime
+  verifiedAt  DateTime?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  @@map("otp_challenges")
+}
+
+model RestaurantProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  name        String
+  description String?
+  address     String
+  lat         Float
+  lng         Float
+  menuItems   Menu[]
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("restaurant_profiles")
+}
+
+model CourierProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  isOnline    Boolean  @default(false)
+  zone        String?
+  vehicleType String?
+  lat         Float?
+  lng         Float?
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deliveries  Delivery[]
+  @@map("courier_profiles")
+}
+
+model Menu {
+  id           String   @id @default(cuid())
+  restaurantId String
+  name         String
+  description  String?
+  priceCents   Int
+  isAvailable  Boolean  @default(true)
+  restaurant   RestaurantProfile @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  @@map("menus")
+}
+
+model Order {
+  id            String   @id @default(cuid())
+  userId        String
+  restaurantId  String
+  status        String
+  totalCents    Int
+  distanceKm    Float?
+  durationMin   Int?
+  paymentIntentId String?
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  delivery      Delivery?
+  offers        DispatchOffer[]
+  events        Event[]
+  createdAt     DateTime @default(now())
+  @@map("orders")
+}
+
+model Delivery {
+  id          String   @id @default(cuid())
+  orderId     String   @unique
+  courierId   String
+  status      String
+  pickedAt    DateTime?
+  deliveredAt DateTime?
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  courier     CourierProfile @relation(fields: [courierId], references: [id], onDelete: Cascade)
+  @@map("deliveries")
+}
+
+model DispatchOffer {
+  id             String   @id @default(cuid())
+  orderId         String
+  courierId       String
+  fareCents       Int
+  expiresAt       DateTime
+  acceptedAt      DateTime?
+  order           Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  @@map("dispatch_offers")
+}
+
+model Event {
+  id        String   @id @default(cuid())
+  orderId   String
+  type      String
+  payload   Json
+  createdAt DateTime @default(now())
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  @@map("events")
+}
