@@ -46,7 +46,7 @@ services:
     build:
       context: .
       dockerfile: apps/api/Dockerfile
-    command: npm run worker
+    command: npm run worker -w apps/api
     environment:
       - NODE_ENV=development
       - DATABASE_URL=${DATABASE_URL}

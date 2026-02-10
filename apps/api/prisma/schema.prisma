@@ -68,6 +68,7 @@ model RestaurantProfile {
   lat         Float
   lng         Float
   menuItems   Menu[]
+  orders      Order[]
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@map("restaurant_profiles")
 }
@@ -100,6 +101,7 @@ model Order {
   id            String   @id @default(cuid())
   userId        String
   restaurantId  String
+  restaurant    RestaurantProfile @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
   status        String
   totalCents    Int
   distanceKm    Float?

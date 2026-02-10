@@ -6,10 +6,11 @@ import { OrdersController } from './orders/orders.controller';
 import { DispatchGateway } from './dispatch/dispatch.gateway';
 import { StripeController } from './stripe/stripe.controller';
 import { CoreService } from './common/core.service';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true })],
-  controllers: [AuthController, MapsController, OrdersController, StripeController],
+  controllers: [AppController, AuthController, MapsController, OrdersController, StripeController],
   providers: [CoreService, DispatchGateway],
 })
 export class AppModule {}

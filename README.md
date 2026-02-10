@@ -76,6 +76,9 @@ Services:
 
 ## API clés (MVP)
 
+### Santé
+- `GET /health`
+
 ### Auth
 - `POST /auth/social/google`
 - `POST /auth/social/facebook`
@@ -186,6 +189,11 @@ npm run dev -w apps/mobile
 6. Livreur accepte, tracking live Socket.IO
 7. Livraison terminée
 8. Capture Stripe à livraison
+
+## Note environnement CI locale
+
+- Si `npm install` échoue avec `403 Forbidden` depuis votre environnement, configurez un registry npm autorisé (miroir interne) puis relancez les builds.
+- Le projet est structuré pour démarrer via Docker une fois les accès registry + clés externes configurés.
 
 ## Validation finale visée
 
