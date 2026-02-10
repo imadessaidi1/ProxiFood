@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "ProxiFood",
+    "slug": "proxifood",
+    "scheme": "proxifood",
+    "plugins": ["expo-router"],
+    "extra": {
+      "googleMapsApiKeyAndroid": "${GOOGLE_MAPS_API_KEY_ANDROID}",
+      "googleMapsApiKeyIos": "${GOOGLE_MAPS_API_KEY_IOS}"
+    }
+  }
+}
