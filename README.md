@@ -205,3 +205,35 @@ npm run dev -w apps/mobile
 - [x] dispatch websocket prêt
 - [x] paiement Stripe endpoints prêts
 - [x] i18n FR/EN packagé
+
+
+## Restaurants + plats (local)
+
+1. Démarrer la stack:
+
+```bash
+docker compose up --build
+```
+
+2. Appliquer les migrations Prisma puis seed:
+
+```bash
+docker compose exec api npx prisma migrate deploy
+docker compose exec api npm run db:seed
+```
+
+3. Vérifier rapidement:
+
+```bash
+curl http://localhost/api/health
+curl 'http://localhost/api/restaurants?page=1&limit=6&q=&city='
+```
+
+Routes front:
+- `http://localhost/restaurants`
+- `http://localhost/restaurants/<restaurantId>`
+
+Routes API:
+- `GET /api/restaurants?page=1&limit=20&q=&city=&cuisineType=`
+- `GET /api/restaurants/:id`
+- `GET /api/restaurants/:id/dishes`
