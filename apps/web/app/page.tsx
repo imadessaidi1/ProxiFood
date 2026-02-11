@@ -1,10 +1,6 @@
+import Link from 'next/link';
 import { Button, Card } from '@/components/ui';
 import { MapViewContainer } from '@/components/maps';
-
-const restaurants = [
-  { name: 'Green Bowl', eta: '22 min', fee: '2,90€' },
-  { name: 'Roma Pasta', eta: '26 min', fee: '1,90€' },
-];
 
 export default function HomePage() {
   return (
@@ -14,17 +10,16 @@ export default function HomePage() {
         <p className="text-gray-500">Commande en moins de 60 secondes.</p>
       </header>
 
-      <section className="space-y-3">
-        {restaurants.map((restaurant) => (
-          <Card key={restaurant.name}>
-            <h2 className="text-lg font-semibold">{restaurant.name}</h2>
-            <p className="text-sm text-gray-500">{restaurant.eta} · Livraison {restaurant.fee}</p>
-          </Card>
-        ))}
-      </section>
+      <Card>
+        <h2 className="text-lg font-semibold">Nouveau catalogue restaurants</h2>
+        <p className="text-sm text-gray-500">Consultez la liste paginée des restaurants et leurs plats en temps réel.</p>
+      </Card>
+
+      <Link href="/restaurants">
+        <Button>Voir les restaurants</Button>
+      </Link>
 
       <MapViewContainer title="Tracking live du livreur" />
-      <Button>Passer au checkout</Button>
     </main>
   );
 }
