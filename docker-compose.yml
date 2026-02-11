@@ -8,6 +8,7 @@ services:
     depends_on:
       - web
       - api
+
   web:
     build:
       context: .
@@ -15,7 +16,8 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3000
-      - NEXT_PUBLIC_API_URL=http://localhost/api
+      # IMPORTANT: dans Docker, localhost ≠ host machine. On vise nginx via son nom de service.
+      - NEXT_PUBLIC_API_URL=http://nginx/api
       - NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY_WEB}
       - NEXTAUTH_URL=${NEXTAUTH_URL}
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
@@ -25,6 +27,7 @@ services:
       - FACEBOOK_CLIENT_SECRET=${FACEBOOK_CLIENT_SECRET}
     depends_on:
       - api
+
   api:
     build:
       context: .
@@ -42,11 +45,13 @@ services:
     depends_on:
       - postgres
       - redis
+
   worker:
     build:
       context: .
-      dockerfile: apps/api/Dockerfile
-    command: npm run worker -w apps/api
+      dockerfile: apps/api/Dockerfile.worker
+    # IMPORTANT: on n’utilise plus npm -w au runtime si ton worker est compilé
+    # (si tu préfères un CMD dans le Dockerfile.worker, tu peux supprimer command:)
     environment:
       - NODE_ENV=development
       - DATABASE_URL=${DATABASE_URL}
@@ -55,6 +60,8 @@ services:
     depends_on:
       - api
       - redis
+      - postgres
+
   postgres:
     image: postgres:16-alpine
     environment:
@@ -65,6 +72,7 @@ services:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+
   redis:
     image: redis:7-alpine
     ports:
