@@ -9,9 +9,10 @@ import { CoreService } from './common/core.service';
 import { HealthController } from './common/health.controller';
 import { PrismaModule } from './prisma/prisma.module';
 import { RestaurantsModule } from './restaurants/restaurants.module';
+import { CartModule } from './modules/cart/cart.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule, RestaurantsModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule, RestaurantsModule, CartModule],
   controllers: [HealthController, AuthController, MapsController, OrdersController, StripeController],
   providers: [CoreService, DispatchGateway],
 })

@@ -19,7 +19,7 @@
     "@nestjs/platform-express": "^10.4.2",
     "@nestjs/swagger": "^7.4.0",
     "@nestjs/websockets": "^10.4.2",
-	"@nestjs/platform-socket.io": "^10.0.0",
+    "@nestjs/platform-socket.io": "^10.0.0",
     "@prisma/client": "^5.20.0",
     "bcryptjs": "^2.4.3",
     "bullmq": "^5.12.12",
@@ -31,8 +31,9 @@
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "socket.io": "^4.7.5",
-	"class-transformer": "^0.5.1",
-    "stripe": "^16.9.0"
+    "class-transformer": "^0.5.1",
+    "stripe": "^16.9.0",
+    "cookie-parser": "^1.4.6"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.4.5",
@@ -40,10 +41,10 @@
     "@types/node": "^22.5.4",
     "prisma": "^5.20.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "@types/cookie-parser": "^1.4.7"
   },
   "prisma": {
     "seed": "ts-node --transpile-only -P apps/api/prisma/tsconfig.seed.json apps/api/prisma/seed.ts"
   }
-
 }

@@ -190,7 +190,32 @@ model Dish {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  cartItems    CartItem[]
 
   @@index([restaurantId])
   @@map("dishes")
+}
+
+model Cart {
+  id           String     @id @default(uuid())
+  restaurantId String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  items        CartItem[]
+
+  @@map("carts")
+}
+
+model CartItem {
+  id       String @id @default(uuid())
+  cartId   String
+  dishId   String
+  quantity Int
+
+  cart Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  dish Dish @relation(fields: [dishId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, dishId])
+  @@index([cartId])
+  @@map("cart_items")
 }
