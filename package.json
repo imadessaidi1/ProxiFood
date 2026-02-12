@@ -10,5 +10,8 @@
     "dev": "npm run dev -w apps/api & npm run dev -w apps/web",
     "lint": "npm run lint -ws --if-present",
     "test": "npm run test -ws --if-present"
+  },
+  "prisma": {
+    "seed": "ts-node --transpile-only -P apps/api/prisma/tsconfig.seed.json apps/api/prisma/seed.ts"
   }
 }

@@ -32,33 +32,39 @@ export type Dish = {
   isAvailable: boolean;
 };
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? '/api';
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL ?? 'http://api:4000';
 
-function buildUrl(path: string, query?: Record<string, string | number | undefined>): string {
-  const base = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-  const url = new URL(`${base}${path}`, 'http://proxifood.local');
+function buildUrl(
+  path: string,
+  query?: Record<string, string | number | undefined>
+): string {
+  const url = new URL(`${API_BASE_URL}${path}`);
 
   if (query) {
-    Object.entries(query).forEach(([key, value]) => {
-      if (value !== undefined && value !== '') {
-        url.searchParams.set(key, String(value));
+    Object.entries(query).forEach(([k, v]) => {
+      if (v !== undefined && v !== '') {
+        url.searchParams.set(k, String(v));
       }
     });
   }
 
-  return `${url.pathname}${url.search}`;
+  return url.toString();
 }
 
-async function apiFetch<T>(path: string, query?: Record<string, string | number | undefined>): Promise<T> {
+async function apiFetch<T>(
+  path: string,
+  query?: Record<string, string | number | undefined>
+): Promise<T> {
   const response = await fetch(buildUrl(path, query), {
-    next: { revalidate: 0 },
+    cache: 'no-store',
   });
 
   if (!response.ok) {
     throw new Error(`API error ${response.status}`);
   }
 
-  return response.json() as Promise<T>;
+  return response.json();
 }
 
 export async function fetchRestaurants(params: {
@@ -68,17 +74,24 @@ export async function fetchRestaurants(params: {
   city?: string;
   cuisineType?: string;
 }): Promise<RestaurantsResponse> {
-  return apiFetch<RestaurantsResponse>('/restaurants', params);
+  return apiFetch('/restaurants', params);
 }
 
-export async function fetchRestaurantDetails(id: string): Promise<RestaurantDetails> {
-  return apiFetch<RestaurantDetails>(`/restaurants/${id}`);
+export async function fetchRestaurantDetails(
+  id: string
+): Promise<RestaurantDetails> {
+  return apiFetch(`/restaurants/${id}`);
 }
 
-export async function fetchRestaurantDishes(id: string): Promise<Dish[]> {
-  return apiFetch<Dish[]>(`/restaurants/${id}/dishes`);
+export async function fetchRestaurantDishes(
+  id: string
+): Promise<Dish[]> {
+  return apiFetch(`/restaurants/${id}/dishes`);
 }
 
 export function formatPrice(priceCents: number): string {
-  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(priceCents / 100);
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'EUR',
+  }).format(priceCents / 100);
 }
