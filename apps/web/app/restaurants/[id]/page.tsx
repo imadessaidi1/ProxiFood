@@ -34,20 +34,22 @@ export default async function RestaurantDetailsPage({ params }: RestaurantDetail
             </Card>
           ) : (
             dishes.map((dish) => (
-              <Card key={dish.id}>
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h3 className="font-semibold">{dish.name}</h3>
-                    <p className="text-sm text-gray-600">{dish.description}</p>
+              <Link key={dish.id} href={`/restaurants/${params.id}/dishes/${dish.id}`}>
+                <Card>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h3 className="font-semibold">{dish.name}</h3>
+                      <p className="text-sm text-gray-600">{dish.description}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold">{formatPrice(dish.priceCents)}</p>
+                      <span className={`inline-flex rounded-full px-2 py-1 text-xs ${dish.isAvailable ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                        {dish.isAvailable ? 'Disponible' : 'Indisponible'}
+                      </span>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="font-semibold">{formatPrice(dish.priceCents)}</p>
-                    <span className={`inline-flex rounded-full px-2 py-1 text-xs ${dish.isAvailable ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                      {dish.isAvailable ? 'Disponible' : 'Indisponible'}
-                    </span>
-                  </div>
-                </div>
-              </Card>
+                </Card>
+              </Link>
             ))
           )}
         </section>
